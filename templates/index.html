@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Food Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <h1>AI Food Detection with Nutrition Info</h1>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <button type="submit">Upload and Detect</button>
+        </form>
+        
+        {% if image %}
+        <h2>Detected Image:</h2>
+        <img src="{{ image }}" width="300">
+        {% endif %}
+        
+        {% if items %}
+        <h2>Detected Foods and Nutrition:</h2>
+        <ul>
+            {% for item in items %}
+            <li>
+                <strong>{{ item.food }}</strong> (Confidence: {{ item.confidence }}%)<br>
+                {% if item.nutrition %}
+                Kalori: {{ item.nutrition.kalori }} kcal<br>
+                Protein: {{ item.nutrition.protein }} g<br>
+                Lemak: {{ item.nutrition.lemak }} g<br>
+                Karbohidrat: {{ item.nutrition.karbohidrat }} g
+                {% else %}
+                Nutrition info not found.
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <ul>
+            Food yang digunakan dalam dataset ini:
+            <li>
+                'Apple', 
+                'Ayam Goreng',
+                'Bakso',
+                'Banana',
+                'Burger',
+                'Capcay',
+                'Chocolate Chip Cookie',
+                'Donat',
+                'Ikan Goreng',
+                'Kentang Goreng',
+                'Kiwi',
+                'Mie Goreng',
+                'Nasi Goreng',
+                'Nasi Putih',
+                'Nugget',
+                'Pempek',
+                'Pineapples',
+                'Pizza',
+                'Rendang Sapi',
+                'Sate',
+                'Spaghetti',
+                'Steak',
+                'Strawberry',
+                'Tahu Goreng',
+                'Telur Goreng',
+                'Telur Rebus',
+                'Tempe Goreng',
+                'Terong Balado',
+                'Tumis Kangkung'
+            </li>
+            <h2>Projek ini akan dikembangkan dengan menambahkan dataset makanan lain</h2>
+        </ul>
+    </div>
+    </body>
+</html>
+    
