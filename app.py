@@ -117,6 +117,20 @@ def get_nutrition(food_name, portion_grams=100):
     }
 
 
+def detect(image_bgr):
+    """Run the model on a BGR image. Returns (items, annotated BGR image)."""
+    result = model.predict(source=image_bgr, conf=0.5, iou=0.7, verbose=False)[0]
+    items = []
+    for box in result.boxes:
+        food_name = result.names[int(box.cls)]
+        items.append({
+            'food': food_name,
+            'confidence': round(float(box.conf) * 100),
+            'nutrition': get_nutrition(food_name),
+        })
+    return items, result.plot()
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -157,18 +171,9 @@ def index():
         os.remove(upload_path)
         return render(lang, error='err_read', status=400)
 
-    result = model.predict(source=image, conf=0.5, iou=0.7, verbose=False)[0]
+    items, annotated = detect(image)
     result_name = f'{uuid.uuid4().hex}.jpg'
-    cv2.imwrite(os.path.join(RESULT_DIR, result_name), result.plot())
-
-    items = []
-    for box in result.boxes:
-        food_name = result.names[int(box.cls)]
-        items.append({
-            'food': food_name,
-            'confidence': round(float(box.conf) * 100),
-            'nutrition': get_nutrition(food_name),
-        })
+    cv2.imwrite(os.path.join(RESULT_DIR, result_name), annotated)
 
     return render(lang, items=items, image=f'/static/results/{result_name}',
                   error=None if items else 'err_none')

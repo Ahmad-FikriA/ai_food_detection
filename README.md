@@ -2,6 +2,8 @@
 
 A Flask web app that detects Indonesian and common foods in a photo with a custom-trained **YOLOv8** model, draws bounding boxes on the image, and shows estimated nutrition (calories, protein, fat, carbohydrates per 100 g) for each detected item.
 
+**Live demo:** https://huggingface.co/spaces/perfectlyx/indonesian-food-scanner
+
 ![Food scanner showing fried tofu and tempeh detected, with calories and a macro breakdown for each and a meal total](images/ui-screenshot.jpg)
 
 ## Features
@@ -74,6 +76,15 @@ yolo detect train model=yolov8n.pt data=Indonesian-Food-8/data.yaml epochs=50 im
 ```
 
 Copy the resulting `runs/detect/train/weights/best.pt` to `model/best.pt`.
+
+## Deploying to Hugging Face Spaces
+
+The live demo runs on a Gradio Space. `space_app.py` serves the Flask app at `/` and a Gradio demo with an API at `/gradio`, both on port 7860. Space-only config (README header, requirements, system packages) lives in `deploy/hf-space/`.
+
+```bash
+hf auth login                 # once, with a write token
+./deploy/hf-space/deploy.sh   # uploads only the files the app needs
+```
 
 ## Limitations
 
