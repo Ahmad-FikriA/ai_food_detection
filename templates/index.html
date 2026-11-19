@@ -1,83 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>AI Food Detection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ t.title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
+    <header class="topbar">
+        <a class="wordmark" href="/?lang={{ lang }}">{{ t.title }}</a>
+        <a class="lang-switch" href="/?lang={{ other }}" hreflang="{{ other }}" lang="{{ other }}">{{ t.switch }}</a>
+    </header>
 
-        <h1>AI Food Detection with Nutrition Info</h1>
-        <form action="/" method="post" enctype="multipart/form-data">
-            <input type="file" name="image" accept="image/*" required>
-            <button type="submit">Upload and Detect</button>
-        </form>
+    <main class="layout">
+        <section class="scanner" aria-labelledby="scanner-heading">
+            <h1 id="scanner-heading">{{ t.intro }}</h1>
 
-        {% if error %}
-        <p class="error">{{ error }}</p>
-        {% endif %}
+            <form id="upload-form" action="/?lang={{ lang }}" method="post" enctype="multipart/form-data">
+                <label class="dropzone{% if image %} has-image{% endif %}" id="dropzone" for="image-input">
+                    <input id="image-input" class="visually-hidden" type="file" name="image"
+                           accept=".jpg,.jpeg,.png,.webp,.bmp,image/*" required>
+                    <img id="preview" class="preview" src="{{ image or '' }}" alt="{{ t.result_alt if image else '' }}"
+                         {% if not image %}hidden{% endif %}>
+                    <span class="drop-prompt" {% if image %}hidden{% endif %}>
+                        <svg class="drop-icon" viewBox="0 0 48 48" aria-hidden="true">
+                            <ellipse cx="24" cy="30" rx="19" ry="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M24 6v16m-7-7 7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <strong>{{ t.drop }}</strong>
+                        <span class="browse">{{ t.browse }}</span>
+                        <small>{{ t.formats }}</small>
+                    </span>
+                </label>
 
-        {% if image %}
-        <h2>Detected Image:</h2>
-        <img src="{{ image }}" alt="Uploaded photo with detected foods outlined">
-        {% endif %}
-        
-        {% if items %}
-        <h2>Detected Foods and Nutrition:</h2>
-        <ul>
-            {% for item in items %}
-            <li>
-                <strong>{{ item.food }}</strong> (Confidence: {{ item.confidence }}%)<br>
-                {% if item.nutrition %}
-                Kalori: {{ item.nutrition.kalori }} kcal<br>
-                Protein: {{ item.nutrition.protein }} g<br>
-                Lemak: {{ item.nutrition.lemak }} g<br>
-                Karbohidrat: {{ item.nutrition.karbohidrat }} g
-                {% else %}
-                Nutrition info not found.
-                {% endif %}
-            </li>
+                <div class="actions">
+                    <button type="submit" id="detect-btn" data-busy="{{ t.detecting }}">{{ t.detect }}</button>
+                    <label for="image-input" class="secondary" id="change-btn" {% if not image %}hidden{% endif %}>{{ t.change }}</label>
+                </div>
+            </form>
+        </section>
+
+        <section class="results" aria-labelledby="results-heading" aria-live="polite">
+            <h2 id="results-heading">{{ t.found }}</h2>
+
+            {% if error %}
+            <p class="notice" role="alert">{{ t[error] }}</p>
+            {% elif not items %}
+            <p class="empty">{{ t.empty }}</p>
+            {% endif %}
+
+            {% if items %}
+            <ol class="food-list">
+                {% for item in items %}
+                <li class="food">
+                    <div class="food-head">
+                        <h3>{{ item.food }}</h3>
+                        <span class="conf">{{ item.confidence }}% {{ t.confidence }}</span>
+                    </div>
+                    {% set n = item.nutrition %}
+                    {% if n %}
+                    <p class="kcal"><span class="kcal-num">{{ n.calories }}</span> {{ t.kcal }} <span class="per">{{ t.per100 }}</span></p>
+                    <div class="strip" role="img" aria-label="{{ t.protein }} {{ n.protein }} g, {{ t.fat }} {{ n.fat }} g, {{ t.carbs }} {{ n.carbs }} g">
+                        <span class="seg seg-protein" style="--w: {{ n.share.protein }}%"></span>
+                        <span class="seg seg-fat" style="--w: {{ n.share.fat }}%"></span>
+                        <span class="seg seg-carbs" style="--w: {{ n.share.carbs }}%"></span>
+                    </div>
+                    <dl class="macros">
+                        <div><dt><i class="dot dot-protein"></i>{{ t.protein }}</dt><dd>{{ n.protein }} g</dd></div>
+                        <div><dt><i class="dot dot-fat"></i>{{ t.fat }}</dt><dd>{{ n.fat }} g</dd></div>
+                        <div><dt><i class="dot dot-carbs"></i>{{ t.carbs }}</dt><dd>{{ n.carbs }} g</dd></div>
+                    </dl>
+                    {% else %}
+                    <p class="empty">{{ t.no_data }}</p>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ol>
+
+            {% if total and items|length > 1 %}
+            <div class="total">
+                <p class="total-label">{{ t.total }}</p>
+                <p class="kcal"><span class="kcal-num">{{ total.calories }}</span> {{ t.kcal }}</p>
+                <p class="total-macros">{{ t.protein }} {{ total.protein }} g, {{ t.fat }} {{ total.fat }} g, {{ t.carbs }} {{ total.carbs }} g</p>
+                <p class="note">{{ t.total_note }}</p>
+            </div>
+            {% endif %}
+            {% endif %}
+        </section>
+    </main>
+
+    <section class="menu" aria-labelledby="menu-heading">
+        <h2 id="menu-heading">{{ t.foods_heading }}</h2>
+        <p class="note">{{ t.foods_note }}</p>
+        <ul class="chips">
+            {% for food in foods %}
+            <li>{{ food }}</li>
             {% endfor %}
         </ul>
-        {% endif %}
+    </section>
 
-        <ul>
-            Food yang digunakan dalam dataset ini:
-            <li>
-                'Apple', 
-                'Ayam Goreng',
-                'Bakso',
-                'Banana',
-                'Burger',
-                'Capcay',
-                'Chocolate Chip Cookie',
-                'Donat',
-                'Ikan Goreng',
-                'Kentang Goreng',
-                'Kiwi',
-                'Mie Goreng',
-                'Nasi Goreng',
-                'Nasi Putih',
-                'Nugget',
-                'Pempek',
-                'Pineapples',
-                'Pizza',
-                'Rendang Sapi',
-                'Sate',
-                'Spaghetti',
-                'Steak',
-                'Strawberry',
-                'Tahu Goreng',
-                'Telur Goreng',
-                'Telur Rebus',
-                'Tempe Goreng',
-                'Terong Balado',
-                'Tumis Kangkung'
-            </li>
-            <h2>Projek ini akan dikembangkan dengan menambahkan dataset makanan lain</h2>
-        </ul>
-    </div>
-    </body>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
 </html>
-    

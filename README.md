@@ -2,7 +2,15 @@
 
 A Flask web app that detects Indonesian and common foods in a photo with a custom-trained **YOLOv8** model, draws bounding boxes on the image, and shows estimated nutrition (calories, protein, fat, carbohydrates per 100 g) for each detected item.
 
-![Detection result: Nasi Goreng, 90% confidence](images/demo-nasi-goreng.jpg)
+![Food scanner showing fried tofu and tempeh detected, with calories and a macro breakdown for each and a meal total](images/ui-screenshot.jpg)
+
+## Features
+
+- Drag-and-drop or click to upload a photo, with a preview before detecting
+- Bounding boxes and confidence for every detected food
+- Calories per 100 g with a protein / fat / carbs breakdown, plus a meal total
+- English and Bahasa Indonesia interface
+- Works on phones, and follows the system light or dark theme
 
 ## Model performance
 
@@ -41,7 +49,10 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open http://127.0.0.1:5000 and upload a food photo (JPG, PNG, WEBP or BMP, up to 10 MB). The trained weights are included at `model/best.pt`. Set `FLASK_DEBUG=1` to enable Flask's debug mode.
+Open http://127.0.0.1:5000 and upload a food photo (JPG, PNG, WEBP or BMP, up to 10 MB). The trained weights are included at `model/best.pt`.
+
+- `PORT` sets the port (default 5000). On macOS, AirPlay uses 5000, so run `PORT=5055 python app.py`.
+- `FLASK_DEBUG=1` enables Flask's debug mode.
 
 ## Project structure
 

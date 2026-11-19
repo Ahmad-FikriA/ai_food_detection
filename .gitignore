@@ -22,3 +22,6 @@ static/results/*
 # Local tool config
 .config/
 .DS_Store
+
+# Local editor/agent config
+.claude/
