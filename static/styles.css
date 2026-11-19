@@ -72,3 +72,11 @@ strong {
     color: #2c3e50;
     font-size: 18px;
 }
+
+.error {
+    text-align: center;
+    color: #b42318;
+    background-color: #fef3f2;
+    padding: 10px;
+    border-radius: 8px;
+}
