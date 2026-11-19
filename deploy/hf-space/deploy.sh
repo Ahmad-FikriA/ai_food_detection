@@ -17,5 +17,6 @@ cp static/styles.css static/app.js "$STAGE/static/"
 touch "$STAGE/static/uploads/.gitkeep" "$STAGE/static/results/.gitkeep"
 cp deploy/hf-space/README.md deploy/hf-space/requirements.txt deploy/hf-space/packages.txt "$STAGE/"
 
-hf upload "$SPACE" "$STAGE" . --repo-type=space --commit-message "${1:-Deploy from GitHub repo}"
+HF="$(command -v hf || echo "$ROOT/.venv/bin/hf")"
+"$HF" upload "$SPACE" "$STAGE" . --repo-type=space --commit-message "${1:-Deploy from GitHub repo}"
 echo "Deployed: https://huggingface.co/spaces/$SPACE"

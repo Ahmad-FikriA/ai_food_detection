@@ -3,6 +3,12 @@
 Serves the Flask web app at / and a Gradio demo (with API) at /gradio,
 both on port 7860. Detection runs on CPU; YOLOv8n is fast enough there.
 """
+import os
+
+# Spaces enables Gradio server-side rendering, which starts a Node server on
+# port 7860 before uvicorn can bind it. The Flask UI doesn't need SSR.
+os.environ['GRADIO_SSR_MODE'] = 'false'
+
 import spaces  # Must be imported before torch on ZeroGPU hardware.
 
 import cv2
@@ -36,8 +42,8 @@ demo = gr.Interface(
 )
 
 server = FastAPI()
-server = gr.mount_gradio_app(server, demo, path='/gradio')
+server = gr.mount_gradio_app(server, demo, path='/gradio', ssr_mode=False)
 server.mount('/', WSGIMiddleware(flask_app))
 
 if __name__ == '__main__':
-    uvicorn.run(server, host='0.0.0.0', port=7860)
+    uvicorn.run(server, host='0.0.0.0', port=int(os.environ.get('GRADIO_SERVER_PORT', 7860)))
