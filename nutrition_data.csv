@@ -5,14 +5,14 @@ calories,proteins,fat,carbohydrate,name
 89.0,1.1,0.3,23.0,Banana
 295.0,17.0,12.0,33.0,Burger
 120.0,5.0,7.0,10.0,Capcay
-78.0,1.0,4.0,10.0,Chocolate Chip Cookie
+488.0,5.1,24.0,64.0,Chocolate Chip Cookie
 195.0,3.0,11.0,22.0,Donat
 206.0,22.0,12.0,0.0,Ikan Goreng
 312.0,3.4,15.0,41.0,Kentang Goreng
 42.0,0.8,0.4,10.0,Kiwi
 468.0,7.6,20.4,62.4,Mie Goreng
 276.0,3.2,3.2,30.2,Nasi Goreng
-175.0,4.5,6.0,25.0,Nasi Putih
+130.0,2.7,0.3,28.2,Nasi Putih
 290.0,14.0,17.0,20.0,Nugget
 250.0,10.0,15.0,20.0,Pempek
 50.0,0.5,0.1,13.0,Pineapples
@@ -20,7 +20,7 @@ calories,proteins,fat,carbohydrate,name
 195.0,25.0,10.0,0.0,Rendang Sapi
 210.0,20.0,12.0,5.0,Sate
 139.0,7.4,2.1,22.6,Spaghetti
-679.0,62.0,48.0,0.0,Steak
+271.0,26.0,18.0,0.0,Steak
 32.0,0.7,0.3,7.7,Strawberry
 115.0,9.7,8.5,2.5,Tahu Goreng
 267.0,13.0,20.0,1.0,Telur Goreng

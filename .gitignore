@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Dataset (download from Roboflow, see README)
+Indonesian-Food-8/
+
+# Base/pretrained weights and training checkpoints (model/best.pt is kept for the demo)
+yolov8n.pt
+yolo11n.pt
+runs/detect/train/weights/
+runs/detect/predict/
+
+# User uploads and generated results
+static/uploads/*
+static/results/*
+!static/uploads/.gitkeep
+!static/results/.gitkeep
+
+# Local tool config
+.config/
+.DS_Store
+
+# Local editor/agent config
+.claude/
