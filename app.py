@@ -119,7 +119,7 @@ def get_nutrition(food_name, portion_grams=100):
 
 def detect(image_bgr):
     """Run the model on a BGR image. Returns (items, annotated BGR image)."""
-    result = model.predict(source=image_bgr, conf=0.5, iou=0.7, verbose=False)[0]
+    result = model.predict(source=image_bgr, conf=0.5, iou=0.7, device='cpu', verbose=False)[0]
     items = []
     for box in result.boxes:
         food_name = result.names[int(box.cls)]
